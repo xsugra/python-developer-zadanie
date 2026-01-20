@@ -11,40 +11,44 @@ class DateHelper:
     @staticmethod
     def parse_german_date(date_text: str) -> Tuple[Optional[str], Optional[str]]:
         """
-        Tries to extract dates from text as "Gültig von 17.02. bis 22.02.2025" or "17.02. - 22.02."
+        Tries to extract dates from text like "Gültig von 17.02. bis 22.02.2025", "17.02. - 22.02.", or even a single date like "ab 15.01.2026".
         """
         current_year = datetime.now().year
 
-        # Use of regex to find dates
-        # Finding patterns like "17.02."
-        pattern = r"(\d{1,2})\.(\d{1,2})\.?"
+        # Regex to find dates like "17.02." or "17.02.2025"
+        pattern = r"(\d{1,2})\.(\d{1,2})\.?(\d{4})?"
         matches = re.findall(pattern, date_text)
 
         if len(matches) >= 2:
-            # Assuming a start on "from" and end as "to"
-            day_from, month_from = matches[0]
-            day_to, month_to = matches[1]
+            # Case 1: Date range found
+            d1, m1, y1 = matches[0]
+            d2, m2, y2 = matches[1]
 
-            # Logic of the year: If the year is not stated, apply actual year.
-            year_from = current_year
-            year_to = current_year
+            year_from = int(y1) if y1 else current_year
+            year_to = int(y2) if y2 else current_year
 
-            # If now is 10th of December and the flyer ends in 10th of January, we must add +1 year.
-            if int(month_from) == 12 & int(month_to) == 1:
-                year_to += 1
+            # Handle year change, e.g. "28.12. - 02.01."
+            if not y1 and not y2 and int(m1) > int(m2):
+                year_to = current_year + 1
 
-            # Trying to find year in the text (e.g. 2026)
-            year_match = re.search(r"20\d{2}", date_text)
-            if year_match:
-                found_year = int(year_match.group(0))
-                year_from = found_year
-                year_to = found_year
-
-            # Formatting date into YYYY-MM-DD form
             try:
-                date_from_obj = datetime(year_from, int(month_from), int(day_from))
-                date_to_obj = datetime(year_to, int(month_to), int(day_to))
+                date_from_obj = datetime(year_from, int(m1), int(d1))
+                date_to_obj = datetime(year_to, int(m2), int(d2))
                 return date_from_obj.strftime("%Y-%m-%d"), date_to_obj.strftime("%Y-%m-%d")
+            except ValueError:
+                return None, None
+
+        elif len(matches) == 1:
+            # Case 2: Only a single date found, e.g., "gültig ab 12.11.2025"
+            d1, m1, y1 = matches[0]
+            year_from = int(y1) if y1 else current_year
+
+            try:
+                date_from_obj = datetime(year_from, int(m1), int(d1))
+                # When only one date is present, we can assume it's valid for at least that one day.
+                # Setting both from and to dates to the same value.
+                date_str = date_from_obj.strftime("%Y-%m-%d")
+                return date_str, date_str
             except ValueError:
                 return None, None
 
