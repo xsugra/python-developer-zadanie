@@ -2,11 +2,11 @@ import requests
 import time
 import logging
 from typing import List
-import config
-from flyer_class import Flyer
-from network import fetch_page
-from parser import get_shop_name_from_url, parse_flyers_from_shop, parse_shop_urls
-from storage import save_flyers_to_json
+from . import config
+from .flyers import Flyer
+from .network import fetch_page
+from .parser import get_shop_name_from_url, parse_flyers_from_shop, parse_shop_urls
+from .storage import save_flyers_to_json
 
 logger = logging.getLogger(__name__)
 

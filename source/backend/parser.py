@@ -1,8 +1,8 @@
 import logging
 from typing import List, Optional
 from bs4 import BeautifulSoup
-from flyer_class import Flyer
-from datehelper_class import DateHelper
+from .flyers import Flyer
+from .date_helper import DateHelper
 
 logger = logging.getLogger(__name__)
 

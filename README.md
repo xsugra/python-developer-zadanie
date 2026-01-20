@@ -4,7 +4,27 @@ Tento projekt je web scraper v Pythone, ktorý sťahuje informácie o propagačn
 
 ## Popis
 
-Skript automaticky prechádza kategóriu "hypermarkety", identifikuje všetky dostupné obchody a pre každý z nich extrahuje detaily o aktuálnych letákoch. Zozbierané údaje zahŕňajú názov letáku, URL náhľadu, názov obchodu a obdobie platnosti. Tieto informácie sa následne ukladajú do súboru `hyperia_letaky.json`.
+Skript automaticky prechádza kategóriu "hypermarkety", identifikuje všetky dostupné obchody a pre každý z nich extrahuje detaily o aktuálnych letákoch. Zozbierané údaje zahŕňajú názov letáku, URL náhľadu, názov obchodu a obdobie platnosti. Tieto informácie sa následne ukladajú do súboru `flyers/hyperia_letaky.json`.
+
+## Štruktúra projektu
+
+
+    ├── source/
+    │   ├── flyers/
+    │   │   └── hyperia_letaky.json  # Výstupný súbor so zozbieranými dátami
+    │   ├── main.py                  # Hlavný vstupný bod aplikácie
+    │   └── backend/
+    │       ├── config.py            # Konfigurácia (URL, hlavičky)
+    │       ├── date_helper.py       # Pomocné funkcie pre prácu s dátumami
+    │       ├── network.py           # Funkcie pre sťahovanie webových stránok
+    │       ├── parser.py            # Logika pre extrakciu dát z HTML
+    │       ├── scraper.py           # Hlavná trieda scrapera, ktorá orchestruje proces
+    │       └── storage.py           # Ukladanie dát do súboru
+    ├── .gitignore                   # Konfigurácia pre Git, ktoré súbory ignorovať
+    ├── Makefile                     # Príkazy pre zjednodušenie práce (inštalácia, spustenie)
+    ├── README.md                    # Tento súbor
+    └── requirements.txt             # Zoznam závislostí pre Python
+
 
 ## Inštalácia
 
@@ -38,7 +58,7 @@ source venv/bin/activate
 Pre spustenie scrapera jednoducho spustite hlavný skript z aktivovaného prostredia:
 
 ```bash
-python main.py
+python source/main.py
 ```
 
 ### Pomocou Makefile
@@ -60,7 +80,7 @@ python main.py
     make clean
     ```
 
-Po úspešnom spustení scrapera sa v hlavnom adresári projektu vytvorí súbor `hyperia_letaky.json` s extrahovanými dátami.
+Po úspešnom spustení scrapera sa v priečinku `flyers` vytvorí súbor `hyperia_letaky.json` s extrahovanými dátami.
 
 ## Závislosti
 

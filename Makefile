@@ -31,11 +31,11 @@ install: venv
 
 # Run: Run the scraper
 run: venv
-	$(PYTHON) main.py
+	$(PYTHON) source/main.py
 
 # Clean: Remove generated files and venv
 clean:
-	rm -f hyperia_letaky.json
+	rm -f flyers/hyperia_letaky.json
 	find . -type d -name "__pycache__" -exec rm -r {} +
 	find . -name ".DS_Store" -delete
 	rm -rf $(VENV)
